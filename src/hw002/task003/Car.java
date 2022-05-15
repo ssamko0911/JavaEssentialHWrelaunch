@@ -15,17 +15,20 @@ public class Car {
     }
 
     public Car(int year, String color) {
-        this(year);
+        this.year = year;
         this.color = color;
     }
 
     public Car(int year, String color, double speed) {
-        this(year, color);
+        this.year = year;
+        this.color = color;
         this.speed = speed;
     }
 
     public Car(int year, String color, double speed, int weight) {
-        this(year, color, speed);
+        this.year = year;
+        this.color = color;
+        this.speed = speed;
         this.weight = weight;
     }
 
