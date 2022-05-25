@@ -1,31 +1,26 @@
 package taskadditional001.models;
 
 public class Cat extends Animal {
-    private boolean isTail;
+    private String breed;
 
     public Cat() {
+
+    }
+    public Cat(String type, boolean isTale, double weight, int legsQuantity, String breed) {
+        super(type, isTale, weight, legsQuantity);
+        this.breed = breed;
     }
 
-    public Cat(String name, boolean isTail) {
-        super(name);
-        this.isTail = isTail;
+    public String getBreed() {
+        return breed;
     }
 
-    public boolean isTail() {
-        return isTail;
-    }
-
-    public void setTail(boolean tail) {
-        isTail = tail;
+    public void setBreed(String breed) {
+        this.breed = breed;
     }
 
     @Override
     public void voice() {
         System.out.printf("%s: this is my MEOW - voice!\n", getClass().getSimpleName());
-    }
-
-    @Override
-    public void voice(String message) {
-        System.out.printf("%s said: %s!\n", getClass().getSimpleName(), message);
     }
 }

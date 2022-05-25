@@ -1,4 +1,4 @@
-package taskadditional001.logic;
+package taskadditional001;
 
 /*
 Дополнительное ДЗ по желанию, чтоб чисто пописать самому код:

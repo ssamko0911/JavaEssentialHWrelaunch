@@ -2,21 +2,51 @@ package taskadditional001.models;
 
 public class Animal {
 
-    private String name;
+    private String type;
+    private boolean isTale;
+    private double weight;
+    private int legsQuantity;
 
     public Animal() {
     }
 
-    public Animal(String name) {
-        this.name = name;
+    public Animal(String type, boolean isTale, double weight, int legsQuantity) {
+        this.type = type;
+        this.isTale = isTale;
+        this.weight = weight;
+        this.legsQuantity = legsQuantity;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isTale() {
+        return isTale;
+    }
+
+    public void setTale(boolean tale) {
+        isTale = tale;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public int getLegsQuantity() {
+        return legsQuantity;
+    }
+
+    public void setLegsQuantity(int legsQuantity) {
+        this.legsQuantity = legsQuantity;
     }
 
     public void voice() {
