@@ -1,4 +1,4 @@
-package hw006;
+package hw006.task002;
 
 /*
 Задание 2
