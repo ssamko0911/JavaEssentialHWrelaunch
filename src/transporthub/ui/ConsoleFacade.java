@@ -2,6 +2,6 @@ package transporthub.ui;
 
 import java.io.IOException;
 
-public interface ConsoleFacadeInterface {
+public interface ConsoleFacade {
     void run() throws IOException;
 }

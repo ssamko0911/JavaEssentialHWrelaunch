@@ -1,12 +1,12 @@
 package transporthub.repositiries.impls;
 
 import transporthub.models.Driver;
-import transporthub.repositiries.DriverRepoInterface;
+import transporthub.repositiries.DriverRepo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DriverRepoImpl implements DriverRepoInterface {
+public class DriverRepoImpl implements DriverRepo {
     private final List<Driver> drivers;
 
     public DriverRepoImpl() {

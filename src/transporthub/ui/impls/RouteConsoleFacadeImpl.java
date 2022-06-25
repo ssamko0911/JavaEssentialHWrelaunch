@@ -2,11 +2,11 @@ package transporthub.ui.impls;
 
 import transporthub.Main;
 import transporthub.models.Route;
-import transporthub.repositiries.RouteRepoInterface;
+import transporthub.repositiries.RouteRepo;
 import transporthub.repositiries.impls.RouteRepoImpl;
-import transporthub.services.RouteServiceInterface;
+import transporthub.services.RouteService;
 import transporthub.services.impls.RouteServiceImpl;
-import transporthub.ui.ConsoleFacadeInterface;
+import transporthub.ui.ConsoleFacade;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,14 +16,14 @@ import java.util.Scanner;
 
 import static transporthub.Main.runMainMenu;
 
-public class RouteConsoleFacadeImpl implements ConsoleFacadeInterface {
+public class RouteConsoleFacadeImpl implements ConsoleFacade {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    RouteRepoInterface routeRepoInterface = new RouteRepoImpl();
-    RouteServiceInterface routeServiceInterface = new RouteServiceImpl(routeRepoInterface);
-    public final RouteServiceInterface ROUTE_SERVICE;
+    RouteRepo routeRepo = new RouteRepoImpl();
+    RouteService routeService = new RouteServiceImpl(routeRepo);
+    public final RouteService ROUTE_SERVICE;
 
     public RouteConsoleFacadeImpl() {
-        ROUTE_SERVICE = this.routeServiceInterface;
+        ROUTE_SERVICE = this.routeService;
     }
 
     @Override

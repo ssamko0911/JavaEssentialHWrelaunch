@@ -3,18 +3,18 @@ package transporthub.services.impls;
 import transporthub.models.Driver;
 import transporthub.models.Route;
 import transporthub.models.Transport;
-import transporthub.repositiries.DriverRepoInterface;
-import transporthub.services.DriverServiceInterface;
+import transporthub.repositiries.DriverRepo;
+import transporthub.services.DriverService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DriverServiceImpl implements DriverServiceInterface {
-    public final DriverRepoInterface driverRepoImpl;
+public class DriverServiceImpl implements DriverService {
+    public final DriverRepo driverRepoImpl;
 
-    public DriverServiceImpl(DriverRepoInterface driverRepoInterface) {
-        this.driverRepoImpl = driverRepoInterface;
+    public DriverServiceImpl(DriverRepo driverRepo) {
+        this.driverRepoImpl = driverRepo;
     }
 
     @Override

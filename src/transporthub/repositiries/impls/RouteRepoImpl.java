@@ -1,12 +1,12 @@
 package transporthub.repositiries.impls;
 
 import transporthub.models.Route;
-import transporthub.repositiries.RouteRepoInterface;
+import transporthub.repositiries.RouteRepo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RouteRepoImpl implements RouteRepoInterface {
+public class RouteRepoImpl implements RouteRepo {
     private final List<Route> routes;
 
     public RouteRepoImpl() {
