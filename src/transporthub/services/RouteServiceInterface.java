@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface RouteServiceInterface {
     Route addRoute(Route route);
-    Boolean removeRoute(Route route);
+    Boolean removeRoute(int id);
     Optional<Route> findRouteById(int someId);
     List<Route> findAllRoutes();
     List<Route> findAllRoutesWithoutTransport();

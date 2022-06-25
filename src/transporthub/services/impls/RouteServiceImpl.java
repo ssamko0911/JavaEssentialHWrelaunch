@@ -20,28 +20,35 @@ public class RouteServiceImpl implements RouteServiceInterface {
     }
 
     @Override
-    public Boolean removeRoute(Route route) {
-        return routeRepoImpl.delete(route);
-    }
-
-    @Override
-    public Optional<Route> findRouteById(int someId) {
+    public Boolean removeRoute(int someId) {
         List<Route> allRoutes = routeRepoImpl.getAll();
         for (Route item : allRoutes) {
             if (item.getId() == someId) {
-                return Optional.ofNullable(allRoutes.get(someId));
+                return routeRepoImpl.delete(item);
             }
         }
-        return Optional.empty();
+        return false;
     }
 
-    @Override
-    public List<Route> findAllRoutes() {
-        return routeRepoImpl.getAll();
+        @Override
+        public Optional<Route> findRouteById (int someId){
+            List<Route> allRoutes = routeRepoImpl.getAll();
+            for (Route item : allRoutes) {
+                if (item.getId() == someId) {
+                    return Optional.ofNullable(allRoutes.get(someId));
+                }
+            }
+            return Optional.empty();
+        }
+
+        @Override
+        public List<Route> findAllRoutes() {
+            return routeRepoImpl.getAll();
+        }
+
+        @Override
+        public List<Route> findAllRoutesWithoutTransport() {
+            return null;
+        }
     }
 
-    @Override
-    public List<Route> findAllRoutesWithoutTransport() {
-        return null;
-    }
-}

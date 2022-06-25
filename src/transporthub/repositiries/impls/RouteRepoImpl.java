@@ -16,7 +16,7 @@ public class RouteRepoImpl implements RouteRepoInterface {
     @Override
     public Route add(Route route) {
         routes.add(route);
-        return getById(route.getId());
+        return route;
     }
 
     @Override

@@ -1,12 +1,13 @@
 package transporthub.models;
 
 public class Route {
+    private static int idCounter;
     private int id;
     private String startOfRoutePoint;
     private String endOfRoutePoint;
 
-    public Route(int id, String startOfRoutePoint, String endOfRoutePoint) {
-        this.id = id;
+    public Route(String startOfRoutePoint, String endOfRoutePoint) {
+        this.id = idCounter++;
         this.startOfRoutePoint = startOfRoutePoint;
         this.endOfRoutePoint = endOfRoutePoint;
     }
