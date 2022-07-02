@@ -1,9 +1,12 @@
 package transporthub.services.impls;
 
 import transporthub.models.Route;
+import transporthub.models.Transport;
 import transporthub.repositiries.RouteRepo;
+import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.RouteService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,11 +34,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Optional<Route> findRouteById(int someId) {
+    public Optional<Route> findRouteById(int id) {
         List<Route> allRoutes = routeRepoImpl.getAll();
         for (Route item : allRoutes) {
-            if (item.getId() == someId) {
-                return Optional.ofNullable(allRoutes.get(someId));
+            if (item.getId() == id) {
+                return Optional.ofNullable(item);
             }
         }
         return Optional.empty();
@@ -48,6 +51,18 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<Route> findAllRoutesWithoutTransport() {
-        return null;
+        List<Transport> transportListWithRoutes = new ArrayList<>();
+        for (Transport item : TransportRepoImpl.getInstance().getAll()) {
+            if (item.getRoute() != null) {
+                transportListWithRoutes.add(item);
+            }
+        }
+        List<Route> routesResult = new ArrayList<>();
+        for (Transport transportListWithRoute : transportListWithRoutes) {
+            routesResult.add(transportListWithRoute.getRoute());
+        }
+        List<Route> routesWithoutTransport = new ArrayList<>(routeRepoImpl.getAll());
+        routesWithoutTransport.removeAll(routesResult);
+        return routesWithoutTransport;
     }
 }

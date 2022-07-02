@@ -1,33 +1,34 @@
 package transporthub.models;
+
+import java.util.Optional;
+
 /*
 	Transport (id, марка, модель, вместимость пассажиров, водитель(Driver),
  маршрут (Route), уровень квалификации для управления ТС (DriverQualificationEnum )),
  НЕ ясно зачем дублировать уровень квалификации водителя).
  */
 public abstract class Transport {
-    private long id;
+    private static int idCounter;
+    private int id;
     private String mark;
     private String model;
     private int numberOfPassengers;
-    private Driver driver;
+    private Optional<Driver> driver;
     private Route route;
     private DriverQualificationEnum driverQualification;
 
-    public Transport(long id, String mark, String model, int numberOfPassengers, Driver driver, Route route, DriverQualificationEnum driverQualification) {
-        this.id = id;
+    public Transport(String mark, String model, int numberOfPassengers) {
+        this.id = idCounter++;
         this.mark = mark;
         this.model = model;
         this.numberOfPassengers = numberOfPassengers;
-        this.driver = driver;
-        this.route = route;
-        this.driverQualification = driverQualification;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -55,11 +56,11 @@ public abstract class Transport {
         this.numberOfPassengers = numberOfPassengers;
     }
 
-    public Driver getDriver() {
+    public Optional<Driver> getDriver() {
         return driver;
     }
 
-    public void setDriver(Driver driver) {
+    public void setDriver(Optional<Driver> driver) {
         this.driver = driver;
     }
 

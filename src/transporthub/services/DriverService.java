@@ -9,12 +9,18 @@ import java.util.Optional;
 
 public interface DriverService {
     Driver addDriver(Driver driver);
-    Boolean removeDriver(Driver driver);
-    Optional<Driver> findDriverById(int id);
-    Optional<Driver> findDriverByLastName(String lastName);
-    List<Driver> findAllDrivers();
-    List<Driver> findAllDriversOnRoute(Route route);
-    List<Transport> findTransportWithoutDrivers();
-    Boolean assignDriverToTransport(Transport transport);
 
+    Boolean removeDriver(int id); // (нельзя удалить если он назначен на какой-то транспорт);
+
+    Optional<Driver> findDriverById(int id);
+
+    Optional<Driver> findDriverByLastName(String lastName);
+
+    List<Driver> findAllDrivers();
+
+    List<Driver> findAllDriversOnRoute(Route route);
+
+    List<Transport> findTransportWithoutDrivers();
+
+    Boolean assignDriverToTransport(Transport transport); // (нельзя назначить если у водителя уровень квалификации прав не соответствует транспорту);
 }

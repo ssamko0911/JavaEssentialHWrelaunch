@@ -7,7 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DriverRepoImpl implements DriverRepo {
+    private static DriverRepoImpl instance;
     private final List<Driver> drivers;
+
+    public static DriverRepoImpl getInstance() {
+        if (instance == null) {
+            instance = new DriverRepoImpl();
+        }
+        return instance;
+    }
 
     public DriverRepoImpl() {
         this.drivers = new ArrayList<>();
@@ -16,7 +24,7 @@ public class DriverRepoImpl implements DriverRepo {
     @Override
     public Driver add(Driver driver) {
         drivers.add(driver);
-        return getById(driver.getId());
+        return driver;
     }
 
     @Override

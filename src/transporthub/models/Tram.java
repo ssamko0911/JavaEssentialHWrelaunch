@@ -1,11 +1,12 @@
 package transporthub.models;
 
+import java.util.Optional;
+
 public class Tram extends Transport {
     private int numberOfWagons;
 
-    public Tram(long id, String mark, String model, int numberOfPassengers, Driver driver, Route route,
-                DriverQualificationEnum driverQualification, int numberOfWagons) {
-        super(id, mark, model, numberOfPassengers, driver, route, driverQualification);
+    public Tram(String mark, String model, int numberOfPassengers, int numberOfWagons) {
+        super(mark, model, numberOfPassengers);
         this.numberOfWagons = numberOfWagons;
     }
 

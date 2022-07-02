@@ -4,6 +4,7 @@ import transporthub.models.Driver;
 import transporthub.models.Route;
 import transporthub.models.Transport;
 import transporthub.repositiries.DriverRepo;
+import transporthub.repositiries.impls.RouteRepoImpl;
 import transporthub.services.DriverService;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DriverServiceImpl implements DriverService {
-    public final DriverRepo driverRepoImpl;
+    private final DriverRepo driverRepoImpl;
 
     public DriverServiceImpl(DriverRepo driverRepo) {
         this.driverRepoImpl = driverRepo;
@@ -23,8 +24,14 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Boolean removeDriver(Driver driver) {
-        return driverRepoImpl.delete(driver);
+    public Boolean removeDriver(int id) {
+        List<Driver> allDrivers = driverRepoImpl.getAll();
+        for (Driver item : allDrivers) {
+            if (item.getId() == id) {
+                return driverRepoImpl.delete(item);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -40,6 +47,12 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Optional<Driver> findDriverByLastName(String lastName) {
+        List<Driver> allDrivers = driverRepoImpl.getAll();
+        for (Driver item : allDrivers) {
+            if (item.getLastName().equals(lastName)) {
+                return Optional.ofNullable(item);
+            }
+        }
         return Optional.empty();
     }
 

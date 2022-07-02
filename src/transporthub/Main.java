@@ -1,9 +1,12 @@
 package transporthub;
 
+import transporthub.ui.impls.DriverConsoleFacadeImpl;
 import transporthub.ui.impls.RouteConsoleFacadeImpl;
+import transporthub.ui.impls.TransportConsoleFacadeImpl;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -29,24 +32,34 @@ public class Main {
     }
 
     public static void runWrongChoiceMenu() {
-        while (startMainMenu() < 0 || startMainMenu() > 3) {
-            System.out.println("Wrong choice.Try one more time.");
+        System.out.println("Wrong choice.Try one more time.");
+        while (startMainMenu() < 0 & startMainMenu() > 3) {
             drawLines();
             runMainMenu();
         }
+        System.err.println("Sorry, program has finished running.");
     }
 
     public static void runMainMenu() {
+        RouteConsoleFacadeImpl routeConsoleFacade = new RouteConsoleFacadeImpl();
+        TransportConsoleFacadeImpl transportConsoleFacade = new TransportConsoleFacadeImpl();
+        DriverConsoleFacadeImpl driverConsoleFacade = new DriverConsoleFacadeImpl();
         try {
             switch (startMainMenu()) {
-                case 1 -> new RouteConsoleFacadeImpl().run();
-                case 2 -> System.out.println("You're in a Transport Menu. Make your choice:");
-                case 3 -> System.out.println("You're in a Driver Menu. Make your choice:");
+                case 1 -> routeConsoleFacade.run();
+                case 2 -> driverConsoleFacade.run();
+                case 3 -> transportConsoleFacade.run();
                 case 0 -> System.out.println("Thank you for using our Transport Station menu.");
                 default -> runWrongChoiceMenu();
             }
         } catch (InputMismatchException | IOException exception) {
             System.err.println("Sorry, program has finished running.");
+        }
+    }
+
+    public static <T> void printInfo(List<T> someArray) {
+        for (T item : someArray) {
+            System.out.println(item);
         }
     }
 }

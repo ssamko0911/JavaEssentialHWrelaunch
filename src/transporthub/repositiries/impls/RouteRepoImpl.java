@@ -7,10 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RouteRepoImpl implements RouteRepo {
+    private static RouteRepoImpl instance;
     private final List<Route> routes;
 
-    public RouteRepoImpl() {
+    private RouteRepoImpl() {
         this.routes = new ArrayList<>();
+    }
+
+    public static RouteRepoImpl getInstance() {
+        if (instance == null) {
+            instance = new RouteRepoImpl();
+        }
+        return instance;
+    }
+
+    public static void setInstance(RouteRepoImpl instance) {
+        RouteRepoImpl.instance = instance;
     }
 
     @Override

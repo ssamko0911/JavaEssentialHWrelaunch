@@ -14,11 +14,12 @@ import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static transporthub.Main.printInfo;
 import static transporthub.Main.runMainMenu;
 
 public class RouteConsoleFacadeImpl implements ConsoleFacade {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    RouteRepo routeRepo = new RouteRepoImpl();
+    RouteRepo routeRepo = RouteRepoImpl.getInstance();
     RouteService routeService = new RouteServiceImpl(routeRepo);
     public final RouteService ROUTE_SERVICE;
 
@@ -34,7 +35,7 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
             case 2 -> executeChoiceTwo();
             case 3 -> executeChoiceThree();
             case 4 -> executeChoiceFour();
-            //case 5 -> executeChoiceFive();
+            case 5 -> executeChoiceFive();
             case 0 -> runMainMenu();
             default -> runWrongChoiceRouteMenu();
         }
@@ -43,19 +44,20 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
     public static int startRouteMenu() {
         int choice;
         Scanner in = new Scanner(System.in);
-        System.out.println("Choose an option:\nPress 1 - Show all routes");
-        System.out.println("Press 2 - Add new route");
-        System.out.println("Press 3 - Cancel existing route");
-        System.out.println("Press 4 - Show route by ID");
-        System.out.println("Press 5 - Show all routes without transport");
-        System.out.println("Press 0 - back to previous menu");
+        System.out.println("Press 1 - Show all Routes");
+        System.out.println("Press 2 - Add new Route");
+        System.out.println("Press 3 - Cancel existing Route");
+        System.out.println("Press 4 - Show Route by ID");
+        System.out.println("Press 5 - Show all Routes without Transport");
+        System.out.println("Press 0 - Back to previous menu");
         choice = in.nextInt();
         return choice;
     }
 
     public void runWrongChoiceRouteMenu() throws IOException {
+        //noinspection InfiniteLoopStatement
         while (true) {
-            System.out.println("Wrong choice.Try one more time.");
+            System.out.println("Wrong choice. Try one more time.");
             Main.drawLines();
             run();
         }
@@ -63,9 +65,9 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
 
     private void executeChoiceOne() throws IOException {
         if (ROUTE_SERVICE.findAllRoutes().isEmpty()) {
-            System.out.println("System has no routes now.");
+            System.out.println("System has no Routes now.");
         } else {
-            System.out.println(ROUTE_SERVICE.findAllRoutes());
+            printInfo(ROUTE_SERVICE.findAllRoutes());
         }
         Main.drawLines();
         run();
@@ -78,38 +80,45 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
     }
 
     private Route createRoute() throws IOException {
-        System.out.println("Please, enter departure point:");
+        System.out.println("Please, enter departure point of the Route:");
         String startRoutePoint = in.readLine();
-        System.out.println("Please, enter arrival point:");
+        System.out.println("Please, enter arrival point of the Route:");
         String endRoutePoint = in.readLine();
         return new Route(startRoutePoint, endRoutePoint);
     }
 
     private void executeChoiceThree() throws IOException {
-        System.out.println("Please, enter route ID you would like to cancel:");
+        System.out.println("Please, enter Route ID you would like to cancel:");
         int idToCancel = Integer.parseInt(in.readLine());
         if (ROUTE_SERVICE.removeRoute(idToCancel)) {
             System.out.println("Route with ID #" + idToCancel + " has cancelled.");
         } else {
-            System.out.println("No routes with such ID has found.");
+            System.out.println("No Routes with such ID has found.");
         }
         Main.drawLines();
         run();
     }
 
     private void executeChoiceFour() throws IOException {
-        System.out.println("Please, enter route ID you would like to see:");
+        System.out.println("Please, enter Route ID you would like to find:");
         int idToShow = Integer.parseInt(in.readLine());
         if (ROUTE_SERVICE.findRouteById(idToShow).equals(Optional.empty())) {
-            System.out.println("System has no routes with such ID.");
+            System.out.println("System has no Routes with such ID.");
         } else {
-            System.out.println(ROUTE_SERVICE.findRouteById(idToShow));
+            System.out.println(ROUTE_SERVICE.findRouteById(idToShow).get());
         }
         Main.drawLines();
         run();
     }
 
-    private void executeChoiceFive() {
-
+    private void executeChoiceFive() throws IOException {
+        if (ROUTE_SERVICE.findAllRoutesWithoutTransport().isEmpty()) {
+            System.out.println("There are no Routes without Transport/no Routes at all in the system.");
+        } else {
+            System.out.println("List of Routes without Transport:");
+            printInfo(ROUTE_SERVICE.findAllRoutesWithoutTransport());
+        }
+        Main.drawLines();
+        run();
     }
 }

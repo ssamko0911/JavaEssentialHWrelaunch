@@ -38,10 +38,7 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route{" +
-                "id=" + id +
-                ", startOfRoutePoint='" + startOfRoutePoint + '\'' +
-                ", endOfRoutePoint='" + endOfRoutePoint + '\'' +
-                '}';
+        return String.format("Route: id - %d, startOfRoutePoint - %s, endOfRoutePoint - %s",
+                id, startOfRoutePoint, endOfRoutePoint);
     }
 }

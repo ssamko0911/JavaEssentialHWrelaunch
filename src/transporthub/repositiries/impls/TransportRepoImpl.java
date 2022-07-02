@@ -7,8 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransportRepoImpl implements TransportRepo {
+    private static TransportRepoImpl instance;
     private final List<Transport> transports;
 
+    public static TransportRepoImpl getInstance() {
+        if (instance == null) {
+            instance = new TransportRepoImpl();
+        }
+        return instance;
+    }
     public TransportRepoImpl() {
         this.transports = new ArrayList<>();
     }

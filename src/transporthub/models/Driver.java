@@ -1,16 +1,15 @@
 package transporthub.models;
-/*
-	Driver (id, имя, фамилия, номер телефона, уровень квалификации (DriverQualificationEnum)
- */
+
 public class Driver {
+    private static int idCounter;
     private int id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private DriverQualificationEnum driverQualificationEnum;
 
-    public Driver(int id, String firstName, String lastName, String phoneNumber, DriverQualificationEnum driverQualificationEnum) {
-        this.id = id;
+    public Driver(String firstName, String lastName, String phoneNumber, DriverQualificationEnum driverQualificationEnum) {
+        this.id = idCounter++;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -59,12 +58,7 @@ public class Driver {
 
     @Override
     public String toString() {
-        return "Driver{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", driverQualificationEnum=" + driverQualificationEnum +
-                '}';
+        return String.format("Driver #%d: id - %d, firstName - %s, lastName - %s, phoneNumber - %s, qualification - %s",
+                id + 1, id, firstName, lastName, phoneNumber, driverQualificationEnum.name());
     }
 }

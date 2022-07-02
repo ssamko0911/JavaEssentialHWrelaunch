@@ -1,13 +1,14 @@
 package transporthub.models;
 
+import java.util.Optional;
+
 public class Bus extends Transport {
     public static final DriverQualificationEnum DRIVER_LICENCE_LEVEL = DriverQualificationEnum.BUS_DRIVING_LICENCE;
     private String type;
     private int numberOfDoors;
 
-    public Bus(long id, String mark, String model, int numberOfPassengers, Driver driver, Route route,
-               DriverQualificationEnum driverQualification, String type, int numberOfDoors) {
-        super(id, mark, model, numberOfPassengers, driver, route, driverQualification);
+    public Bus(String mark, String model, int numberOfPassengers, String type, int numberOfDoors) {
+        super(mark, model, numberOfPassengers);
         this.type = type;
         this.numberOfDoors = numberOfDoors;
     }
