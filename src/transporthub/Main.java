@@ -1,5 +1,6 @@
 package transporthub;
 
+import transporthub.ui.ConsoleFacade;
 import transporthub.ui.impls.DriverConsoleFacadeImpl;
 import transporthub.ui.impls.RouteConsoleFacadeImpl;
 import transporthub.ui.impls.TransportConsoleFacadeImpl;
@@ -41,9 +42,9 @@ public class Main {
     }
 
     public static void runMainMenu() {
-        RouteConsoleFacadeImpl routeConsoleFacade = new RouteConsoleFacadeImpl();
-        TransportConsoleFacadeImpl transportConsoleFacade = new TransportConsoleFacadeImpl();
-        DriverConsoleFacadeImpl driverConsoleFacade = new DriverConsoleFacadeImpl();
+        ConsoleFacade routeConsoleFacade = new RouteConsoleFacadeImpl();
+        ConsoleFacade transportConsoleFacade = new TransportConsoleFacadeImpl();
+        ConsoleFacade driverConsoleFacade = new DriverConsoleFacadeImpl();
         try {
             switch (startMainMenu()) {
                 case 1 -> routeConsoleFacade.run();

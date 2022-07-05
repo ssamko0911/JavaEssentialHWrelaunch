@@ -3,13 +3,23 @@ package transporthub.services.impls;
 import transporthub.models.Route;
 import transporthub.models.Transport;
 import transporthub.repositiries.TransportRepo;
+import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.TransportService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TransportServiceImpl implements TransportService {
     private final TransportRepo transportRepoImpl;
+    private static TransportServiceImpl instance;
+
+    public static TransportServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new TransportServiceImpl(TransportRepoImpl.getInstance());
+        }
+        return instance;
+    }
 
     public TransportServiceImpl(TransportRepo transportRepoImpl) {
         this.transportRepoImpl = transportRepoImpl;
@@ -25,7 +35,7 @@ public class TransportServiceImpl implements TransportService {
         List<Transport> allTransports = transportRepoImpl.getAll();
         for (Transport item : allTransports) {
             if (item.getId() == id) {
-                if (item.getDriver() != null) { // так не годится
+                if (item.getDriver().isPresent()) {
                     return transportRepoImpl.delete(item);
                 }
             }
@@ -34,14 +44,14 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public Transport findTransportById(int id) {
+    public Optional<Transport> findTransportById(int id) {
         List<Transport> allTransports = transportRepoImpl.getAll();
         for (Transport item : allTransports) {
             if (item.getId() == id) {
-                return item;
+                return Optional.of(item);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

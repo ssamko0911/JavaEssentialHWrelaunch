@@ -1,10 +1,11 @@
 package transporthub.services.impls;
 
 import transporthub.models.Driver;
+import transporthub.models.DriverQualificationEnum;
 import transporthub.models.Route;
 import transporthub.models.Transport;
 import transporthub.repositiries.DriverRepo;
-import transporthub.repositiries.impls.RouteRepoImpl;
+import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.DriverService;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DriverServiceImpl implements DriverService {
+
     private final DriverRepo driverRepoImpl;
 
     public DriverServiceImpl(DriverRepo driverRepo) {
@@ -50,7 +52,7 @@ public class DriverServiceImpl implements DriverService {
         List<Driver> allDrivers = driverRepoImpl.getAll();
         for (Driver item : allDrivers) {
             if (item.getLastName().equals(lastName)) {
-                return Optional.ofNullable(item);
+                return Optional.of(item);
             }
         }
         return Optional.empty();
@@ -68,13 +70,30 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public List<Transport> findTransportWithoutDrivers() {
-        List<Transport> temporaryTransportList = new ArrayList<>();// дописать направление транспорта
+        List<Transport> transportListWithDrivers = new ArrayList<>();
+        for (Transport item : TransportRepoImpl.getInstance().getAll()) {
+            if (item.getDriver().isPresent()) {
+                transportListWithDrivers.add(item);
+            }
+        }
 
-        return null;
+        List<Transport> transportListWithoutTransport = new ArrayList<>(TransportRepoImpl.getInstance().getAll());
+        transportListWithDrivers.removeAll(transportListWithDrivers);
+        return transportListWithDrivers;
     }
 
     @Override
-    public Boolean assignDriverToTransport(Transport transport) {
-        return null;
+    public Boolean assignDriverToTransport(int transportID, Driver driver) {
+        List<Transport> allTransports = TransportRepoImpl.getInstance().getAll();
+        for (Transport item : allTransports) {
+            if (item.getId() == transportID
+                    & (item.getDriverQualification().equals(driver.getDriverQualificationEnum())
+                    || item.getDriverQualification().equals(DriverQualificationEnum.MULTI_DRIVING_LICENCE))) {
+                item.setDriver(Optional.of(driver));
+                return true;
+            }
+        }
+        return false;
     }
+
 }

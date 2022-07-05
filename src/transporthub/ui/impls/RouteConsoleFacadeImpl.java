@@ -2,8 +2,6 @@ package transporthub.ui.impls;
 
 import transporthub.Main;
 import transporthub.models.Route;
-import transporthub.repositiries.RouteRepo;
-import transporthub.repositiries.impls.RouteRepoImpl;
 import transporthub.services.RouteService;
 import transporthub.services.impls.RouteServiceImpl;
 import transporthub.ui.ConsoleFacade;
@@ -11,7 +9,6 @@ import transporthub.ui.ConsoleFacade;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Optional;
 import java.util.Scanner;
 
 import static transporthub.Main.printInfo;
@@ -19,8 +16,7 @@ import static transporthub.Main.runMainMenu;
 
 public class RouteConsoleFacadeImpl implements ConsoleFacade {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    RouteRepo routeRepo = RouteRepoImpl.getInstance();
-    RouteService routeService = new RouteServiceImpl(routeRepo);
+    RouteService routeService = RouteServiceImpl.getInstance();
     public final RouteService ROUTE_SERVICE;
 
     public RouteConsoleFacadeImpl() {
@@ -49,7 +45,7 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
         System.out.println("Press 3 - Cancel existing Route");
         System.out.println("Press 4 - Show Route by ID");
         System.out.println("Press 5 - Show all Routes without Transport");
-        System.out.println("Press 0 - Back to previous menu");
+        System.out.println("Press 0 - Back to previous Menu");
         choice = in.nextInt();
         return choice;
     }
@@ -102,10 +98,10 @@ public class RouteConsoleFacadeImpl implements ConsoleFacade {
     private void executeChoiceFour() throws IOException {
         System.out.println("Please, enter Route ID you would like to find:");
         int idToShow = Integer.parseInt(in.readLine());
-        if (ROUTE_SERVICE.findRouteById(idToShow).equals(Optional.empty())) {
-            System.out.println("System has no Routes with such ID.");
-        } else {
+        if (ROUTE_SERVICE.findRouteById(idToShow).isPresent()) {
             System.out.println(ROUTE_SERVICE.findRouteById(idToShow).get());
+        } else {
+            System.out.println("System has no Routes with such ID.");
         }
         Main.drawLines();
         run();

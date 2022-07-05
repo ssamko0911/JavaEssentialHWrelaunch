@@ -3,10 +3,13 @@ package transporthub.ui.impls;
 import transporthub.Main;
 import transporthub.models.Driver;
 import transporthub.models.DriverQualificationEnum;
+import transporthub.models.Transport;
 import transporthub.repositiries.DriverRepo;
 import transporthub.repositiries.impls.DriverRepoImpl;
+import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.DriverService;
 import transporthub.services.impls.DriverServiceImpl;
+import transporthub.services.impls.TransportServiceImpl;
 import transporthub.ui.ConsoleFacade;
 
 import java.io.BufferedReader;
@@ -49,8 +52,8 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         int choice;
         Scanner in = new Scanner(System.in);
         System.out.println("Press 1 - Show all Drivers in the park");
-        System.out.println("Press 2 - Add a new Driver");
-        System.out.println("Press 3 - Assign Driver on transport");
+        System.out.println("Press 2 - Add a new Driver"); // done
+        System.out.println("Press 3 - Assign Driver on Transport");
         System.out.println("Press 4 - Show Driver info by ID");
         System.out.println("Press 5 - Show Driver info by surname");
         System.out.println("Press 6 - Quit Driver from park");
@@ -82,7 +85,7 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
 
     private void executeChoiceTwo() throws IOException {
         System.out.println(DRIVER_SERVICE.addDriver(createDriver()));
-        System.out.println("Driver has created.");
+        System.out.println("Driver has joined Park crew.");
         drawLines();
         run();
     }
@@ -106,6 +109,22 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
     }
 
     private void executeChoiceThree() throws IOException {
+        System.out.println("Please, enter Transport ID you would like to assign Driver on:");
+        int transportId = Integer.parseInt(in.readLine());
+        if (TransportServiceImpl.getInstance().findTransportById(transportId).isPresent()) {
+            System.out.println("Please, enter Driver ID you would like to assign:");
+            int driverId = Integer.parseInt(in.readLine());
+            for (Transport item : TransportServiceImpl.getInstance().findAllTransports()) {
+                if (item.getId() == transportId) {
+                    item.setDriver(DRIVER_SERVICE.findDriverById(driverId));
+                    System.out.println("Driver has assigned on Transport.");
+                } else {
+                    System.out.println("No Driver with such ID has found.");
+                }
+            }
+        } else {
+            System.out.println("No Transport with such ID has found.");
+        }
         drawLines();
         run();
     }
@@ -116,7 +135,7 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         if (DRIVER_SERVICE.findDriverById(idToShow).equals(Optional.empty())) {
             System.out.println("System has no drivers with such ID.");
         } else {
-            System.out.println(DRIVER_SERVICE.findDriverById(idToShow));
+            System.out.println(DRIVER_SERVICE.findDriverById(idToShow).get());
         }
         Main.drawLines();
         run();
@@ -137,10 +156,18 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
 
     private void executeChoiceSix() throws IOException {
         System.out.println("Input ID of Driver you'd like to quit from the park:");
-        if (DRIVER_SERVICE.removeDriver(Integer.parseInt(in.readLine()))) {
-            System.out.println("Driver has fired from the park.");
+        int driverId = Integer.parseInt(in.readLine());
+        if (DRIVER_SERVICE.findDriverById(driverId).isPresent()) {
+            for (Transport item : TransportRepoImpl.getInstance().getAll()) {
+                if (item.getDriver().get().getId() == driverId) {
+                    System.out.println("Impossible to resign Driver (assigned on Transport).");
+                } else {
+                    DRIVER_SERVICE.removeDriver(driverId);
+                    System.out.println("Driver has fired from the park.");
+                }
+            }
         } else {
-            System.out.println("Impossible to quit driver because of assigning on a transport.");
+            System.out.println("No Driver with such ID in the Park.");
         }
         drawLines();
         run();

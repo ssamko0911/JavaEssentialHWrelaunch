@@ -22,5 +22,5 @@ public interface DriverService {
 
     List<Transport> findTransportWithoutDrivers();
 
-    Boolean assignDriverToTransport(Transport transport); // (нельзя назначить если у водителя уровень квалификации прав не соответствует транспорту);
+    Boolean assignDriverToTransport(int transportId, Driver driver); // (нельзя назначить если у водителя уровень квалификации прав не соответствует транспорту);
 }

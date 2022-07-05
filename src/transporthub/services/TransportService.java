@@ -11,7 +11,7 @@ public interface TransportService {
 
     Boolean removeTransport(int id); // (нельзя удалить если на транспорт назначен водитель);
 
-    Transport findTransportById(int id);
+    Optional<Transport> findTransportById(int id);
 
     List<Transport> findAllTransports();
 

@@ -3,7 +3,7 @@ package transporthub.services.impls;
 import transporthub.models.Route;
 import transporthub.models.Transport;
 import transporthub.repositiries.RouteRepo;
-import transporthub.repositiries.impls.TransportRepoImpl;
+import transporthub.repositiries.impls.RouteRepoImpl;
 import transporthub.services.RouteService;
 
 import java.util.ArrayList;
@@ -12,6 +12,14 @@ import java.util.Optional;
 
 public class RouteServiceImpl implements RouteService {
     private final RouteRepo routeRepoImpl;
+    private static RouteServiceImpl instance;
+
+    public static RouteServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new RouteServiceImpl(RouteRepoImpl.getInstance());
+        }
+        return instance;
+    }
 
     public RouteServiceImpl(RouteRepo routeRepoImpl) {
         this.routeRepoImpl = routeRepoImpl;
@@ -38,7 +46,7 @@ public class RouteServiceImpl implements RouteService {
         List<Route> allRoutes = routeRepoImpl.getAll();
         for (Route item : allRoutes) {
             if (item.getId() == id) {
-                return Optional.ofNullable(item);
+                return Optional.of(item);
             }
         }
         return Optional.empty();
@@ -52,7 +60,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public List<Route> findAllRoutesWithoutTransport() {
         List<Transport> transportListWithRoutes = new ArrayList<>();
-        for (Transport item : TransportRepoImpl.getInstance().getAll()) {
+        for (Transport item : TransportServiceImpl.getInstance().findAllTransports()) {
             if (item.getRoute() != null) {
                 transportListWithRoutes.add(item);
             }
@@ -61,7 +69,7 @@ public class RouteServiceImpl implements RouteService {
         for (Transport transportListWithRoute : transportListWithRoutes) {
             routesResult.add(transportListWithRoute.getRoute());
         }
-        List<Route> routesWithoutTransport = new ArrayList<>(routeRepoImpl.getAll());
+        List<Route> routesWithoutTransport = new ArrayList<>(RouteServiceImpl.instance.findAllRoutes());
         routesWithoutTransport.removeAll(routesResult);
         return routesWithoutTransport;
     }

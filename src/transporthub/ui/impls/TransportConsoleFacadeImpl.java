@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -21,8 +20,7 @@ import static transporthub.Main.*;
 
 public class TransportConsoleFacadeImpl implements ConsoleFacade {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    TransportRepo transportRepo = TransportRepoImpl.getInstance();
-    TransportService transportService = new TransportServiceImpl(transportRepo);
+    TransportService transportService = TransportServiceImpl.getInstance();
     public final TransportService TRANSPORT_SERVICE;
 
     public TransportConsoleFacadeImpl() {
@@ -48,9 +46,9 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
     public static int startTransportMenu() {
         int choice;
         Scanner in = new Scanner(System.in);
-        System.out.println("Press 1 - Show all kinds of transport in the park");
-        System.out.println("Press 2 - Add new transport(Bus or Tram)");
-        System.out.println("Press 3 - Take away transport from the park");
+        System.out.println("Press 1 - Show all kinds of transport in the park"); // done
+        System.out.println("Press 2 - Add new transport(Bus or Tram)"); // done
+        System.out.println("Press 3 - Take away transport from the park"); // done
         System.out.println("Press 4 - Show transport by ID");
         System.out.println("Press 5 - Put transport on a Route");
         System.out.println("Press 6 - Show all transport by Mark");
@@ -145,7 +143,9 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
 
     private void executeChoiceThree() throws IOException {
         System.out.println("Input ID of transport you'd like to delete from the park:");
-        if (TRANSPORT_SERVICE.removeTransport(Integer.parseInt(in.readLine()))) {
+        int transportID = Integer.parseInt(in.readLine());
+        if (TRANSPORT_SERVICE.removeTransport(transportID)
+                & TRANSPORT_SERVICE.findTransportById(transportID).flatMap(Transport::getDriver).isEmpty()) {
             System.out.println("Transport has deleted from the park.");
         } else {
             System.out.println("Impossible to delete transport with assigned Driver.");
@@ -174,7 +174,7 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
             route = RouteRepoImpl.getInstance().getById(idRoute);
             System.out.println("Input ID of Transport:");
             int idTransport = Integer.parseInt(in.readLine());
-            if (!(TRANSPORT_SERVICE.findAllTransports().isEmpty()) && (TRANSPORT_SERVICE.findAllTransports().size() > idTransport) && (TRANSPORT_SERVICE.findTransportById(idTransport).getDriver() != null)) {
+            if (!(TRANSPORT_SERVICE.findAllTransports().isEmpty()) && (TRANSPORT_SERVICE.findAllTransports().size() > idTransport) && (TRANSPORT_SERVICE.findTransportById(idTransport).flatMap(Transport::getDriver).isPresent())) {
                 System.out.println("Transport successfully added on a Route.");
                 System.out.println(TRANSPORT_SERVICE.assignTransportOnRoute(idTransport, route));
             } else {

@@ -58,7 +58,7 @@ public class Driver {
 
     @Override
     public String toString() {
-        return String.format("Driver #%d: id - %d, firstName - %s, lastName - %s, phoneNumber - %s, qualification - %s",
-                id + 1, id, firstName, lastName, phoneNumber, driverQualificationEnum.name());
+        return String.format("Driver: id - %d, firstName - %s, lastName - %s, phoneNumber - %s, qualification - %s",
+                id, firstName, lastName, phoneNumber, driverQualificationEnum.name());
     }
 }

@@ -21,10 +21,6 @@ public class RouteRepoImpl implements RouteRepo {
         return instance;
     }
 
-    public static void setInstance(RouteRepoImpl instance) {
-        RouteRepoImpl.instance = instance;
-    }
-
     @Override
     public Route add(Route route) {
         routes.add(route);

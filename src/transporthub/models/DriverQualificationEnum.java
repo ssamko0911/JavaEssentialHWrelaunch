@@ -17,8 +17,6 @@ public enum DriverQualificationEnum {
 
     @Override
     public String toString() {
-        return "DriverQualificationEnum{" +
-                "termOfValidity=" + termOfValidity +
-                "}";
+        return String.format("Driver license: %s.", DriverQualificationEnum.valueOf(name()));
     }
 }

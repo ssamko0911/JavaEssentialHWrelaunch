@@ -82,14 +82,7 @@ public abstract class Transport {
 
     @Override
     public String toString() {
-        return "Transport{" +
-                "id=" + id +
-                ", mark='" + mark + '\'' +
-                ", model='" + model + '\'' +
-                ", numberOfPassengers=" + numberOfPassengers +
-                ", driver=" + driver +
-                ", route=" + route +
-                ", driverQualification=" + driverQualification +
-                '}';
+        return String.format("Transport: id - %d, mark - %s, model - %s, number of passengers - %d, driver - %s, driver license - %s",
+                id, mark, model, numberOfPassengers, Optional.ofNullable(driver), driverQualification);
     }
 }
