@@ -1,12 +1,10 @@
 package transporthub.models;
 
-import java.util.Optional;
-
 public class Tram extends Transport {
     private int numberOfWagons;
 
-    public Tram(String mark, String model, int numberOfPassengers, int numberOfWagons) {
-        super(mark, model, numberOfPassengers);
+    public Tram(String mark, String model, int numberOfPassengers, DriverQualificationEnum driverQualification, int numberOfWagons) {
+        super(mark, model, numberOfPassengers, driverQualification);
         this.numberOfWagons = numberOfWagons;
     }
 
@@ -20,8 +18,6 @@ public class Tram extends Transport {
 
     @Override
     public String toString() {
-        return "Tram{" +
-                "numberOfWagons=" + numberOfWagons +
-                "} " + super.toString();
+        return super.toString() + String.format(", number of wagons - %d.", numberOfWagons);
     }
 }

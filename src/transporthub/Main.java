@@ -34,11 +34,8 @@ public class Main {
 
     public static void runWrongChoiceMenu() {
         System.out.println("Wrong choice.Try one more time.");
-        while (startMainMenu() < 0 & startMainMenu() > 3) {
-            drawLines();
-            runMainMenu();
-        }
-        System.err.println("Sorry, program has finished running.");
+        drawLines();
+        runMainMenu();
     }
 
     public static void runMainMenu() {

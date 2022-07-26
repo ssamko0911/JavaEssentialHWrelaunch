@@ -2,7 +2,6 @@ package transporthub.repositiries.impls;
 
 import transporthub.models.Transport;
 import transporthub.repositiries.TransportRepo;
-import transporthub.services.impls.TransportServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

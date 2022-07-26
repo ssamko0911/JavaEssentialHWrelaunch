@@ -4,9 +4,6 @@ import transporthub.Main;
 import transporthub.models.Driver;
 import transporthub.models.DriverQualificationEnum;
 import transporthub.models.Transport;
-import transporthub.repositiries.DriverRepo;
-import transporthub.repositiries.impls.DriverRepoImpl;
-import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.DriverService;
 import transporthub.services.impls.DriverServiceImpl;
 import transporthub.services.impls.TransportServiceImpl;
@@ -15,16 +12,15 @@ import transporthub.ui.ConsoleFacade;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Scanner;
 
 import static transporthub.Main.*;
 
 public class DriverConsoleFacadeImpl implements ConsoleFacade {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    DriverRepo driverRepo = DriverRepoImpl.getInstance();
-    DriverService driverService = new DriverServiceImpl(driverRepo);
+    DriverService driverService = DriverServiceImpl.getInstance();
     public final DriverService DRIVER_SERVICE;
 
     public DriverConsoleFacadeImpl() {
@@ -53,10 +49,10 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         Scanner in = new Scanner(System.in);
         System.out.println("Press 1 - Show all Drivers in the park");
         System.out.println("Press 2 - Add a new Driver"); // done
-        System.out.println("Press 3 - Assign Driver on Transport");
-        System.out.println("Press 4 - Show Driver info by ID");
-        System.out.println("Press 5 - Show Driver info by surname");
-        System.out.println("Press 6 - Quit Driver from park");
+        System.out.println("Press 3 - Assign Driver on Transport"); // +- done
+        System.out.println("Press 4 - Show Driver info by ID"); // done
+        System.out.println("Press 5 - Show All Drivers by surname"); // done
+        System.out.println("Press 6 - Quit Driver from park"); // done
         System.out.println("Press 7 - Get all drivers assigned on a Route");
         System.out.println("Press 8 - Get all transports without Drivers");
         System.out.println("Press 0 - back to previous menu");
@@ -98,14 +94,14 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         System.out.println("Input driver's cell number:");
         String cell = in.readLine();
         System.out.println("Input Driver license qualification:\npress 1 - BUS license\npress 2 - TRAM license\npress 3 - multi license.");
-        DriverQualificationEnum qualification = null;
+        Driver driver = null;
         int licenseChoice = Integer.parseInt(in.readLine());
         switch (licenseChoice) {
-            case 1 -> qualification = DriverQualificationEnum.BUS_DRIVING_LICENCE;
-            case 2 -> qualification = DriverQualificationEnum.TRAM_DRIVING_LICENCE;
-            case 3 -> qualification = DriverQualificationEnum.MULTI_DRIVING_LICENCE;
+            case 1 -> driver = new Driver(firstName, lastName, cell, DriverQualificationEnum.BUS_DRIVING_LICENCE);
+            case 2 -> driver = new Driver(firstName, lastName, cell, DriverQualificationEnum.TRAM_DRIVING_LICENCE);
+            case 3 -> driver = new Driver(firstName, lastName, cell, DriverQualificationEnum.MULTI_DRIVING_LICENCE);
         }
-        return new Driver(firstName, lastName, cell, qualification);
+        return driver;
     }
 
     private void executeChoiceThree() throws IOException {
@@ -114,13 +110,14 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         if (TransportServiceImpl.getInstance().findTransportById(transportId).isPresent()) {
             System.out.println("Please, enter Driver ID you would like to assign:");
             int driverId = Integer.parseInt(in.readLine());
-            for (Transport item : TransportServiceImpl.getInstance().findAllTransports()) {
-                if (item.getId() == transportId) {
-                    item.setDriver(DRIVER_SERVICE.findDriverById(driverId));
+            if (DRIVER_SERVICE.findDriverById(driverId).isPresent()) {
+                if (DRIVER_SERVICE.assignDriverToTransport(transportId, DRIVER_SERVICE.findDriverById(driverId).get())) {
                     System.out.println("Driver has assigned on Transport.");
                 } else {
-                    System.out.println("No Driver with such ID has found.");
+                    System.out.println("Driver has no right qualification to be assigned on Transport.");
                 }
+            } else {
+                System.out.println("No Driver with such ID has found.");
             }
         } else {
             System.out.println("No Transport with such ID has found.");
@@ -132,10 +129,10 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
     private void executeChoiceFour() throws IOException {
         System.out.println("Please, enter Driver ID you would like to see:");
         int idToShow = Integer.parseInt(in.readLine());
-        if (DRIVER_SERVICE.findDriverById(idToShow).equals(Optional.empty())) {
-            System.out.println("System has no drivers with such ID.");
-        } else {
+        if (DRIVER_SERVICE.findDriverById(idToShow).isPresent()) {
             System.out.println(DRIVER_SERVICE.findDriverById(idToShow).get());
+        } else {
+            System.out.println("System has no drivers with such ID.");
         }
         Main.drawLines();
         run();
@@ -144,11 +141,11 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
     private void executeChoiceFive() throws IOException {
         System.out.println("Please, enter Driver's surname to get information:");
         String surname = in.readLine();
-        if (DRIVER_SERVICE.findDriverByLastName(surname).equals(Optional.empty())) {
-            System.out.println("System has no drivers with such Lastname.");
-        } else {
+        if (!DRIVER_SERVICE.findDriverByLastName(surname).isEmpty()) {
             System.out.println("Full driver's info:".toUpperCase(Locale.ROOT));
-            System.out.println(DRIVER_SERVICE.findDriverByLastName(surname));
+            printInfo(DRIVER_SERVICE.findDriverByLastName(surname));
+        } else {
+            System.out.println("System has no drivers with such Lastname.");
         }
         Main.drawLines();
         run();
@@ -158,12 +155,18 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         System.out.println("Input ID of Driver you'd like to quit from the park:");
         int driverId = Integer.parseInt(in.readLine());
         if (DRIVER_SERVICE.findDriverById(driverId).isPresent()) {
-            for (Transport item : TransportRepoImpl.getInstance().getAll()) {
-                if (item.getDriver().get().getId() == driverId) {
-                    System.out.println("Impossible to resign Driver (assigned on Transport).");
-                } else {
-                    DRIVER_SERVICE.removeDriver(driverId);
-                    System.out.println("Driver has fired from the park.");
+            List<Transport> transportList = TransportServiceImpl.getInstance().findAllTransports();
+            if (transportList.isEmpty()) {
+                DRIVER_SERVICE.removeDriver(driverId);
+                System.out.println("Driver has fired from the park.");
+            } else { // delete - rewrite;
+                for (Transport item : transportList) {
+                    if (item.getDriver().isEmpty() & item.getDriver().get().getId() != driverId) {
+                        DRIVER_SERVICE.removeDriver(driverId);
+                        System.out.println("Driver has fired from the park.");
+                    } else {
+                        System.out.println("Impossible to resign Driver (assigned on Transport).");
+                    }
                 }
             }
         } else {
@@ -173,9 +176,27 @@ public class DriverConsoleFacadeImpl implements ConsoleFacade {
         run();
     }
 
-    private void executeChoiceEight() {
+    private void executeChoiceSeven() throws IOException {
+        System.out.println("Input ID of Route you'd like to get all Drivers:");
+        int routeId = Integer.parseInt(in.readLine());
+        if (!DRIVER_SERVICE.findAllDriversOnRoute(routeId).isEmpty()) {
+            System.out.println("List of Drivers on chosen Route:".toUpperCase(Locale.ROOT));
+            printInfo(DRIVER_SERVICE.findAllDriversOnRoute(routeId));
+        } else {
+            System.out.println("There is no such specific Route in th system or there are no Drivers on the Route.");
+        }
+        Main.drawLines();
+        run();
     }
 
-    private void executeChoiceSeven() {
+    private void executeChoiceEight() throws IOException {
+        if (DRIVER_SERVICE.findTransportWithoutDrivers().isEmpty()) {
+            System.out.println("There are no Transport without Drivers in the system.");
+        } else {
+            System.out.println("List of Transports without Drivers:");
+            printInfo(DRIVER_SERVICE.findTransportWithoutDrivers());
+        }
+        Main.drawLines();
+        run();
     }
 }

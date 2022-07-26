@@ -1,22 +1,18 @@
 package transporthub.models;
 
 public enum DriverQualificationEnum {
-    BUS_DRIVING_LICENCE(10),
-    TRAM_DRIVING_LICENCE(10),
-    MULTI_DRIVING_LICENCE(10);
+    BUS_DRIVING_LICENCE ("Bus License"),
+    TRAM_DRIVING_LICENCE ("Tram License"),
+    MULTI_DRIVING_LICENCE ("Multi License");
 
-    private int termOfValidity;
+    private final String name;
 
-    DriverQualificationEnum(int termOfValidity) {
-        this.termOfValidity = termOfValidity;
-    }
-
-    public int getTermOfValidity() {
-        return termOfValidity;
+    DriverQualificationEnum(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return String.format("Driver license: %s.", DriverQualificationEnum.valueOf(name()));
+        return String.format("Lic.Type: %s.", this.name);
     }
 }

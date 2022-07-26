@@ -2,9 +2,7 @@ package transporthub.ui.impls;
 
 import transporthub.Main;
 import transporthub.models.*;
-import transporthub.repositiries.TransportRepo;
 import transporthub.repositiries.impls.RouteRepoImpl;
-import transporthub.repositiries.impls.TransportRepoImpl;
 import transporthub.services.TransportService;
 import transporthub.services.impls.TransportServiceImpl;
 import transporthub.ui.ConsoleFacade;
@@ -38,6 +36,7 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
             case 5 -> executeChoiceFive();
             case 6 -> executeChoiceSix();
             case 7 -> executeChoiceSeven();
+            case 8 -> executeChoiceEight();
             case 0 -> runMainMenu();
             default -> runWrongChoiceTransportMenu();
         }
@@ -124,7 +123,7 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
         int numberOfPassengers = Integer.parseInt(in.readLine());
         System.out.println("Input number of wagons:");
         int numberOfWagons = Integer.parseInt(in.readLine());
-        return new Tram(mark, model, numberOfPassengers, numberOfWagons);
+        return new Tram(mark, model, numberOfPassengers, DriverQualificationEnum.TRAM_DRIVING_LICENCE, numberOfWagons);
     }
 
     private static Transport createBus() throws IOException {
@@ -138,7 +137,7 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
         String type = in.readLine();
         System.out.println("Input number of doors:");
         int numberOfDoors = Integer.parseInt(in.readLine());
-        return new Bus(mark, model, numberOfPassengers, type, numberOfDoors);
+        return new Bus(mark, model, numberOfPassengers, DriverQualificationEnum.BUS_DRIVING_LICENCE, type, numberOfDoors);
     }
 
     private void executeChoiceThree() throws IOException {
@@ -200,6 +199,27 @@ public class TransportConsoleFacadeImpl implements ConsoleFacade {
         run();
     }
 
-    private void executeChoiceSeven() {
+    private void executeChoiceSeven() throws IOException {
+        System.out.println("Please, enter ID of Transport you would like to take of the Route:");
+        int transportID = Integer.parseInt(in.readLine());
+        if (TRANSPORT_SERVICE.findTransportById(transportID).isPresent()) {
+            TRANSPORT_SERVICE.takeTransportOfRoute(transportID);
+            System.out.println("Transport ID#" + transportID + " has successfully taken of the Route");
+        } else {
+            System.out.println("No Transport with such ID or Transport is not assigned on the Route.");
+        }
+        drawLines();
+        run();
+    }
+
+    private void executeChoiceEight() throws IOException {
+        if (TRANSPORT_SERVICE.findTransportWithoutDrivers().isEmpty()) {
+            System.out.println("System has no Transport without Drivers now.");
+        } else {
+            System.out.println("List of Transports without Drivers:");
+            printInfo(TRANSPORT_SERVICE.findTransportWithoutDrivers());
+        }
+        drawLines();
+        run();
     }
 }
